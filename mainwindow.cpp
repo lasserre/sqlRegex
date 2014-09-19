@@ -15,10 +15,10 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(InitDatabase()));
 
     db = new QSqlDatabase();
-    *db = QSqlDatabase::addDatabase("QSQLITE");
+    *db = QSqlDatabase::addDatabase("QMYSQL");
     db->setHostName("localhost");
-    db->setDatabaseName("/Users/calebstewart/test.db");
-    db->setUserName("calebstewart");
+    db->setDatabaseName("test");
+    db->setUserName("root");
     //db.setPassword("");
 
     // Check for successful open...
@@ -39,11 +39,23 @@ MainWindow::~MainWindow()
 void MainWindow::InitDatabase()
 {
     QSqlQuery query(*db);
+    //QSqlQuery query2(*db);
     if (query.exec("select * from mytable;"))
     {
         ui->listWidget->clear();
         while (query.next())
             ui->listWidget->addItem(query.value(0).toString());
+
+//        QString queryStr1 = "SELECT load_extension('/usr/lib/sqlite3/pcre.so');";
+//        QString queryStr2 = "SELECT sqlite_compileoption_used('ENABLE_LOAD_EXTENSION');";
+
+//        if (query2.exec(queryStr2))
+//        {
+//            query2.next();
+//            ui->label->setText(query2.value(0).toString());
+//        }
+//        if (query2.exec(queryStr1))
+//            ui->label->setText("Loaded");
     }
     else
         ui->label->setText("Unsuccessful");
